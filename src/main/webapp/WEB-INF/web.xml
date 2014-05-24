@@ -5,6 +5,24 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
 
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>com.omsu.cherepanov.servlets.ServletFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>InSystem</filter-name>
+        <filter-class>com.omsu.cherepanov.servlets.InSystem</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/main.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>InSystem</filter-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>com.omsu.cherepanov.hibernate.HibernateListener</listener-class>
     </listener>
@@ -13,12 +31,19 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>com.omsu.cherepanov.servlets.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>com.omsu.cherepanov.servlets.LogoutServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
+        <url-pattern>/loginservlet</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logoutservlet</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

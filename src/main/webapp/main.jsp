@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<a href="/logoutservlet">Logout</a>>
 <div id="map" style="width: 40%; height: 40%; position:absolute; left:30%; top:30%;"></div>
 </body>
 </html>
