@@ -5,6 +5,7 @@ import com.omsu.cherepanov.clients.People;
 import com.omsu.cherepanov.connection.Connection;
 import com.omsu.cherepanov.graph.DirectedGraph;
 import com.omsu.cherepanov.graph.ElementOfGraph;
+import com.omsu.cherepanov.graph.SingletonGraph;
 import com.omsu.cherepanov.graph.VertexConnection;
 import com.omsu.cherepanov.hibernate.*;
 import com.omsu.cherepanov.users.UserBean;
@@ -126,11 +127,11 @@ public class ProjectX {
         ConnectionDAO connectionDAO = new ConnectionDAO();
         Equipment test5555 = new Equipment("qwe", "qwe", 1);
         MainclientDAO userDAO = new MainclientDAO();
-        Mainclient ttt = new Mainclient(1, 1, 257);
+        Mainclient ttt = new Mainclient(55.7749, 37.6434, 257);
         ttt.addEquipment(test5555, 5);
         EquipmentDAO testDAO = new EquipmentDAO();
         PeopleDAO peopleDAO = new PeopleDAO();
-        People testPeople = new People(1, 2, 7, "test", "XYI");
+        People testPeople = new People(55.7595, 37.5981, 7, "test", "XYI");
         People testPeople1 = new People(1, 3.5, 4, "test1", "XYI1");
         Construction testConstruction = new Construction("test");
         testConstruction.setObjectID(77);
@@ -153,7 +154,7 @@ public class ProjectX {
         vertexConnection.addVertex(testPeople, testC12);
         vertexConnection1.addVertex(testPeople, testC101);
         vertexConnection1.addVertex(ttt, testC11);
-        DirectedGraph test123 = new DirectedGraph();
+        DirectedGraph test123 = SingletonGraph.getInstance();
         UserDAO test444 = new UserDAO();
         //test123.addVertex();
         //ElementOfGraphDAO elementOfGraphDAO = new ElementOfGraphDAO();
@@ -179,10 +180,14 @@ public class ProjectX {
             vertexConnectionDAO.saveVertexConnection(vertexConnection1);
             VertexConnection t1 = vertexConnectionDAO.retrieveVertexConnection(12);
             VertexConnection t2 = vertexConnectionDAO.retrieveVertexConnection(13);
-            //DirectedGraph test123 = directedGraphDAO.retrieveDirectedGraph();
-            directedGraphDAO.deleteDirectedGraph(test123);
-            vertexConnectionDAO.deleteVertexConnection(t1);
-            vertexConnectionDAO.deleteVertexConnection(t2);
+//            DirectedGraph test124 = directedGraphDAO.retrieveDirectedGraph();
+//            test123.setAmountOfEdge(test124.getAmountOfEdge());
+//            test123.setAmountOfVertex(test124.getAmountOfVertex());
+//            test123.setConnectionOfVertex(test124.getConnectionOfVertex());
+            DirectedGraph test125 = SingletonGraph.getInstance();
+            //directedGraphDAO.deleteDirectedGraph(test125);
+            //vertexConnectionDAO.deleteVertexConnection(t1);
+            //vertexConnectionDAO.deleteVertexConnection(t2);
             System.out.print("1");
 
         } catch (Exception e) {

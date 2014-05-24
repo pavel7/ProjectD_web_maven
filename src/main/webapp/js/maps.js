@@ -11,6 +11,7 @@ function init() {
         type: 'yandex#satellite'
     });
 }
+
 function setCenter (centerX, centerY) {
     myMap.setCenter([centerX, centerY]);
 }
@@ -21,14 +22,15 @@ function setBounds (southeastX, southeastY, northwestX, northwestY) {
     myMap.setBounds([[southeastX, southeastY], [northwestX, northwestY]]);
 }
 
-function addVertex(positionX, positionY)
-{
-    myMap.geoObjects.add(new ymaps.Placemark([positionX, positionX], {
-        balloonContent: 'text'
-    }, {
-        preset: 'islands#circleIcon',
-        iconColor: '#4d7198'
-    }));
+function addVertex(positionX, positionY) {
+    return function () {
+        myMap.geoObjects.add(new ymaps.Placemark([positionX, positionY], {
+            balloonContent: 'text'
+        }, {
+            preset: 'islands#circleIcon',
+            iconColor: '#4d7198'
+        }));
+    }
 }
 
 function addEdge(startX, stratY, endX, endY) {

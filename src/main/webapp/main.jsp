@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.omsu.cherepanov.graph.SingletonGraph" %>
+<%@ page import="com.omsu.cherepanov.graph.DirectedGraph" %>
 <html>
 <head>
     <title>Maps</title>
@@ -18,5 +20,14 @@
     <a href="/logoutservlet">Logout</a>
 </div>
 <div id="map" style="width: 40%; height: 40%; position:absolute; left:30%; top:30%;"></div>
+<script>
+<% DirectedGraph directedGraph = SingletonGraph.getInstance();
+   for(int i = 0;i < directedGraph.getAmountOfVertex();i++)
+   {
+    %>ymaps.ready(addVertex(<%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointX()%>,
+                <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointY()%>));<%
+   }
+%>
+</script>
 </body>
 </html>
