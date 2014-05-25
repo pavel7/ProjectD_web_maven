@@ -6,8 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.omsu.cherepanov.graph.SingletonGraph" %>
 <%@ page import="com.omsu.cherepanov.graph.DirectedGraph" %>
+<%@ page import="com.omsu.cherepanov.graph.SingletonGraph" %>
 <html>
 <head>
     <title>Maps</title>
@@ -21,13 +21,30 @@
 </div>
 <div id="map" style="width: 40%; height: 40%; position:absolute; left:30%; top:30%;"></div>
 <script>
-<% DirectedGraph directedGraph = SingletonGraph.getInstance();
-   for(int i = 0;i < directedGraph.getAmountOfVertex();i++)
-   {
-    %>ymaps.ready(addVertex(<%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointX()%>,
-                <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointY()%>));<%
-   }
-%>
+    <% DirectedGraph directedGraph = SingletonGraph.getInstance();
+       for(int i = 0;i < directedGraph.getAmountOfVertex();i++)
+       {
+       if(!directedGraph.getConnectionOfVertex().get(i).getVertexConnection().isEmpty()){
+        %>ymaps.ready(addLabelVertex(<%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointX()%>,
+                    <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointY()%>,
+                    <%=i%>));
+    <%
+                    int edgeLenght = directedGraph.getConnectionOfVertex().get(i).getVertexConnection().size();
+
+                    for(int j=0;j<edgeLenght;j++)
+                    {
+                        %>ymaps.ready(addEdge(<%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointX()%>,
+                    <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointY()%>,
+                    <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getVertex().getPointX()%>,
+                    <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getVertex().getPointY()%>,
+                    <%= directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getEdge().getDefence()%>));
+    <%
+                    }
+                    }
+
+       }
+    %>
+    ymaps.ready(addAllCollection());
 </script>
 </body>
 </html>

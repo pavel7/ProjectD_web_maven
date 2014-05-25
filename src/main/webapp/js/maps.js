@@ -2,6 +2,14 @@
  * Created by Павел on 24.05.2014.
  */
 ymaps.ready(init);
+
+var myVertexGeoObjects;
+
+var myEdgeGeoObjects;
+
+var myEdgePathGeoObjects;
+
+
 var myMap;
 
 function init() {
@@ -10,16 +18,47 @@ function init() {
         zoom: 7,
         type: 'yandex#satellite'
     });
+    myVertexGeoObjects = new ymaps.GeoObjectCollection({},
+        {
+            preset: 'islands#blackStretchyIcon',
+            draggable: false
+        });
+    myEdgeGeoObjects = new ymaps.GeoObjectCollection({}, {
+        geodesic: true,
+        strokeWidth: 5,
+        opacity: 0.5,
+        strokeColor: "#FF0000",
+        strokeStyle: 'shortdash'
+    });
+    myEdgePathGeoObjects = new ymaps.GeoObjectCollection({}, {
+        geodesic: true,
+        strokeWidth: 5,
+        opacity: 0.5,
+        strokeColor: "#FFF000",
+        strokeStyle: 'shortdash'
+    });
 }
 
-function setCenter (centerX, centerY) {
+function addAllCollection() {
+    return function () {
+        myMap.geoObjects.add(myVertexGeoObjects);
+        myMap.geoObjects.add(myEdgeGeoObjects);
+        myMap.geoObjects.add(myEdgePathGeoObjects);
+        myMap.setBounds(myVertexGeoObjects.getBounds());
+    }
+}
+
+function setCenter(centerX, centerY) {
     myMap.setCenter([centerX, centerY]);
 }
 
-function setBounds (southeastX, southeastY, northwestX, northwestY) {
+function setBounds(southeastX, southeastY, northwestX, northwestY) {
     // Bounds - границы видимой области карты.
     // Задаются в географических координатах самой юго-восточной и самой северо-западной точек видимой области.
-    myMap.setBounds([[southeastX, southeastY], [northwestX, northwestY]]);
+    myMap.setBounds([
+        [southeastX, southeastY],
+        [northwestX, northwestY]
+    ]);
 }
 
 function addVertex(positionX, positionY) {
@@ -33,20 +72,61 @@ function addVertex(positionX, positionY) {
     }
 }
 
-function addEdge(startX, stratY, endX, endY) {
+function addLabelVertex(positionX, positionY, iconlabel, text) {
+    return function () {
+        myVertexGeoObjects.add(new ymaps.GeoObject({
+            // Описание геометрии.
+            geometry: {
+                type: "Point",
+                coordinates: [positionX, positionY]
+            },
+            properties: {
+                // Контент метки.
+                iconContent: iconlabel,
+                hintContent: text
+            }
+        }));
+    }
+}
 
-    ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
-        var arrow = new Arrow([
-            [startX, stratY],
+function addPolilineEdge(startX, startY, endX, endY, information) {
+    return function () {
+        var myPolyline = new ymaps.Polyline([
+            // Указываем координаты вершин ломаной.
+            [startX, startY],
+            [(startX + endX) / 2 , startY],
             [endX, endY]
-        ], null, {
-            geodesic: true,
-            strokeWidth: 5,
-            opacity: 0.5,
-            strokeStyle: 'shortdash'
+        ], {
+            balloonContent: information
+        }, {
+            // Задаем опции геообъекта.
+            // Отключаем кнопку закрытия балуна.
+            balloonCloseButton: true,
+            // Цвет линии.
+            strokeColor: "#000000",
+            // Ширина линии.
+            strokeWidth: 3,
+            // Коэффициент прозрачности.
+            strokeOpacity: 0.5
         });
-        myMap.geoObjects.add(arrow);
-    });
+        myMap.geoObjects.add(myPolyline);
+    }
+
+}
+
+function addEdge(startX, startY, endX, endY, information) {
+    return function () {
+        ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
+            var arrow = new Arrow([
+                [startX, startY],
+                [(startX + endX) / 2, startY],
+                [endX, endY]
+            ], {
+                balloonContent: "Defence=" + information
+            });
+            myEdgeGeoObjects.add(arrow);
+        });
+    }
 }
 
 /*
@@ -269,15 +349,18 @@ ymaps.modules.define("overlay.Arrow", [
         }
     });
 
-    function getArrowsBeginningCoordinates (coordinates, arrowLength, arrowAngle) {
+    function getArrowsBeginningCoordinates(coordinates, arrowLength, arrowAngle) {
         var p1 = coordinates[0],
             p2 = coordinates[1],
             dx = arrowLength * Math.sin(arrowAngle),
             y = p2[1] - arrowLength * Math.cos(arrowAngle);
-        return [[p1[0] - dx, y], [p1[0] + dx, y]];
+        return [
+            [p1[0] - dx, y],
+            [p1[0] + dx, y]
+        ];
     }
 
-    function rotate (coordinates, angle) {
+    function rotate(coordinates, angle) {
         var rotatedCoordinates = [];
         for (var i = 0, l = coordinates.length, x, y; i < l; i++) {
             x = coordinates[i][0];
@@ -290,11 +373,11 @@ ymaps.modules.define("overlay.Arrow", [
         return rotatedCoordinates;
     }
 
-    function getRotationAngle (p1, p2) {
+    function getRotationAngle(p1, p2) {
         return Math.PI / 2 - Math.atan2(p2[1] - p1[1], p2[0] - p1[0]);
     }
 
-    function getContourFromLineCoordinates (coords) {
+    function getContourFromLineCoordinates(coords) {
         var contour = coords.slice();
         for (var i = coords.length - 2; i > -1; i--) {
             contour.push(coords[i]);
@@ -302,7 +385,7 @@ ymaps.modules.define("overlay.Arrow", [
         return contour;
     }
 
-    function calculateArrowLength (coords, minLength, maxLength) {
+    function calculateArrowLength(coords, minLength, maxLength) {
         var linePixelLength = 0;
         for (var i = 1, l = coords.length; i < l; i++) {
             linePixelLength += getVectorLength(
@@ -317,7 +400,7 @@ ymaps.modules.define("overlay.Arrow", [
         return finalArrowLength < minLength ? 0 : finalArrowLength;
     }
 
-    function getVectorLength (x, y) {
+    function getVectorLength(x, y) {
         return Math.sqrt(x * x + y * y);
     }
 

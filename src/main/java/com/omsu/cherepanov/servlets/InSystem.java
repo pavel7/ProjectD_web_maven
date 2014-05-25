@@ -23,27 +23,18 @@ public class InSystem implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
-        if (session != null)
-        {
+        if (session != null) {
             UserBean userBean = (UserBean) session.getAttribute("currentSessionUser");
-            if (userBean != null)
-            {
-                if(userBean.isValid())
-                {
+            if (userBean != null) {
+                if (userBean.isValid()) {
                     resp.sendRedirect("main.jsp");
-                }
-                else
-                {
+                } else {
                     filterChain.doFilter(req, resp);
                 }
-            }
-            else
-            {
+            } else {
                 filterChain.doFilter(req, resp);
             }
-        }
-        else
-        {
+        } else {
             filterChain.doFilter(req, resp);
         }
     }

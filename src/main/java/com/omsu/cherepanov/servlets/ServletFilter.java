@@ -3,7 +3,6 @@ package com.omsu.cherepanov.servlets;
 import com.omsu.cherepanov.users.UserBean;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,27 +22,18 @@ public class ServletFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
-        if (session != null)
-        {
+        if (session != null) {
             UserBean userBean = (UserBean) session.getAttribute("currentSessionUser");
-            if (userBean != null)
-            {
-                if(userBean.isValid())
-                {
+            if (userBean != null) {
+                if (userBean.isValid()) {
                     filterChain.doFilter(req, resp);
-                }
-                else
-                {
+                } else {
                     resp.sendRedirect("index.jsp");
                 }
-            }
-            else
-            {
+            } else {
                 resp.sendRedirect("index.jsp");
             }
-        }
-        else
-        {
+        } else {
             resp.sendRedirect("index.jsp");
         }
     }

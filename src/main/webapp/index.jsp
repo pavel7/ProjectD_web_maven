@@ -1,18 +1,7 @@
 <html>
 <head>
     <title>Login Page</title>
-    <script>
-        function isEmpty(temp) {
-
-            if (temp.login.value == '') {
-                alert("Please enter login");
-                return false;
-            } else if (temp.password.value == '') {
-                alert("Please enter password");
-                return false;
-            }
-        }
-    </script>
+    <script src="/js/myScript.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>

@@ -30,15 +30,10 @@ public class LoginServlet extends HttpServlet {
                     resp.sendRedirect("main.jsp");
                 } else
                     resp.sendRedirect("index.jsp");
-            }
-            else{
+            } else {
                 resp.sendRedirect("index.jsp");
             }
-        }
-
-
-        catch (Throwable theException)
-        {
+        } catch (Throwable theException) {
             System.out.println(theException);
         }
     }
