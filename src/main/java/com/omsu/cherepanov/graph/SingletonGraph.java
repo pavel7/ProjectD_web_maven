@@ -25,4 +25,31 @@ public class SingletonGraph {
         }
         return localInstance;
     }
+
+    public static void updateInstance()
+    {
+        DirectedGraphDAO directedGraphDAO = new DirectedGraphDAO();
+        DirectedGraph localInstance = instance;
+        if (localInstance == null) {
+            synchronized (DirectedGraph.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    try {
+                        instance = localInstance = directedGraphDAO.retrieveDirectedGraph();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        else{
+            synchronized (DirectedGraph.class) {
+                    try {
+                        instance = localInstance = directedGraphDAO.retrieveDirectedGraph();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+    }
 }

@@ -1,15 +1,11 @@
 /**
  * Created by Павел on 24.05.2014.
  */
-ymaps.ready(init);
+
 
 var myVertexGeoObjects;
-
 var myEdgeGeoObjects;
-
 var myEdgePathGeoObjects;
-
-
 var myMap;
 
 function init() {
@@ -23,29 +19,42 @@ function init() {
             preset: 'islands#blackStretchyIcon',
             draggable: false
         });
-    myEdgeGeoObjects = new ymaps.GeoObjectCollection({}, {
-        geodesic: true,
-        strokeWidth: 5,
-        opacity: 0.5,
-        strokeColor: "#FF0000",
-        strokeStyle: 'shortdash'
-    });
-    myEdgePathGeoObjects = new ymaps.GeoObjectCollection({}, {
-        geodesic: true,
-        strokeWidth: 5,
-        opacity: 0.5,
-        strokeColor: "#FFF000",
-        strokeStyle: 'shortdash'
-    });
+    myEdgeGeoObjects = new ymaps.GeoObjectCollection({},
+        {
+            geodesic: true,
+            strokeWidth: 5,
+            opacity: 0.5,
+            strokeColor: "#FF0000",
+            strokeStyle: 'shortdash'
+        });
+    myEdgePathGeoObjects = new ymaps.GeoObjectCollection({},
+        {
+            geodesic: true,
+            strokeWidth: 5,
+            opacity: 0.5,
+            strokeColor: "#FFF000",
+            strokeStyle: 'shortdash'
+        });
+}
+
+function update() {
+    myMap.update();
 }
 
 function addAllCollection() {
-    return function () {
         myMap.geoObjects.add(myVertexGeoObjects);
         myMap.geoObjects.add(myEdgeGeoObjects);
         myMap.geoObjects.add(myEdgePathGeoObjects);
         myMap.setBounds(myVertexGeoObjects.getBounds());
-    }
+}
+
+function removeAllCollection() {
+        myMap.geoObjects.remove(myVertexGeoObjects);
+        myMap.geoObjects.remove(myEdgeGeoObjects);
+        myMap.geoObjects.remove(myEdgePathGeoObjects);
+        myVertexGeoObjects.removeAll();
+        myEdgeGeoObjects.removeAll();
+        myEdgePathGeoObjects.removeAll();
 }
 
 function setCenter(centerX, centerY) {
@@ -73,7 +82,6 @@ function addVertex(positionX, positionY) {
 }
 
 function addLabelVertex(positionX, positionY, iconlabel, text) {
-    return function () {
         myVertexGeoObjects.add(new ymaps.GeoObject({
             // Описание геометрии.
             geometry: {
@@ -86,48 +94,33 @@ function addLabelVertex(positionX, positionY, iconlabel, text) {
                 hintContent: text
             }
         }));
-    }
 }
 
-function addPolilineEdge(startX, startY, endX, endY, information) {
-    return function () {
-        var myPolyline = new ymaps.Polyline([
-            // Указываем координаты вершин ломаной.
-            [startX, startY],
-            [(startX + endX) / 2 , startY],
-            [endX, endY]
-        ], {
-            balloonContent: information
-        }, {
-            // Задаем опции геообъекта.
-            // Отключаем кнопку закрытия балуна.
-            balloonCloseButton: true,
-            // Цвет линии.
-            strokeColor: "#000000",
-            // Ширина линии.
-            strokeWidth: 3,
-            // Коэффициент прозрачности.
-            strokeOpacity: 0.5
-        });
-        myMap.geoObjects.add(myPolyline);
-    }
-
-}
 
 function addEdge(startX, startY, endX, endY, information) {
-    return function () {
         ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
-            var arrow = new Arrow([
+            myEdgeGeoObjects.add(new Arrow([
                 [startX, startY],
                 [(startX + endX) / 2, startY],
                 [endX, endY]
             ], {
                 balloonContent: "Defence=" + information
-            });
-            myEdgeGeoObjects.add(arrow);
+            }));
         });
-    }
 }
+
+function addPathEdge(startX, startY, endX, endY, information) {
+    ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
+        myEdgePathGeoObjects.add(new Arrow([
+            [startX, startY],
+            [(startX + endX) / 2, startY],
+            [endX, endY]
+        ], {
+            balloonContent: "Defence=" + information
+        }));
+    });
+}
+
 
 /*
  * Класс, позволяющий создавать стрелку на карте.
