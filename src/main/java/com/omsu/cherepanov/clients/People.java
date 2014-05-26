@@ -70,7 +70,7 @@ public class People extends Mainclient {
             return false;
         if (getClass() != otherEquipment.getClass())
             return false;
-        Construction other = (Construction) otherEquipment;
+        People other = (People) otherEquipment;
         if (this.getObjectID() != other.getObjectID()) return false;
         return true;
     }

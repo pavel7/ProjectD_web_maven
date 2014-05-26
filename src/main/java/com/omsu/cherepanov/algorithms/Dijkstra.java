@@ -40,6 +40,7 @@ public class Dijkstra {
         vertexFlag = new boolean[amountOfVertex];
         //all elements creates as 0 by default
         arrayPath = new int[amountOfVertex];
+        arrayPath[indexOfFromClient] = indexOfFromClient;
     }
 
     public int[] pathFromTo() {
@@ -65,9 +66,6 @@ public class Dijkstra {
 
         for (int i = 0; i < amountOfVertex; i++) {
             int indexOfMaximum = this.indexOfMaximumValue();
-            if (indexOfMaximum == -1) {
-                return arrayPath;
-            }
             vertexFlag[indexOfMaximum] = true;
             Iterator linkWithCurrent = graph.getIteratorOfElem(indexOfMaximum);
             linkWithCurrent.next();
@@ -82,7 +80,10 @@ public class Dijkstra {
                     arrayPath[indexClientInGraph] = indexOfMaximum;
                 }
             }
-
+        }
+        for (int j = 0; j < amountOfVertex; j++) {
+            if (defenceArray[j] == 0)
+                arrayPath[j] = -1;
         }
         return arrayPath;
 
