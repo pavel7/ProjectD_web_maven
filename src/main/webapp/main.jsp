@@ -13,10 +13,12 @@
     <title>Maps</title>
     <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <script src="/js/maps.js"></script>
+    <script src="/js/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
     <script>
         ymaps.ready(init);
         ymaps.ready(loadMap);
+
         function loadMap(){
         removeAllCollection()
         <% DirectedGraph directedGraph = SingletonGraph.getInstance();
@@ -43,6 +45,26 @@
            }
            %>addAllCollection();
         };
+
+            setInterval(function() {$.ajax(
+                    {
+                        url: "/updategraph",
+                        data:      { },
+                        success: function() {
+                            directedGraph = SingletonGraph.getInstance();
+                            loadMap();},
+                        error: function(data, stat, th)
+                        {
+                            if (data.status == 403)
+                            {
+                                alert("Your session is expired. Please relogin.");
+                                document.location.reload();
+                            }
+                            else
+                                alert('Error!\n' + data.responseText + '\n' + stat + '\n' + th);
+                        }
+                    });
+        }, 15000);
     </script>
 </head>
 <body>

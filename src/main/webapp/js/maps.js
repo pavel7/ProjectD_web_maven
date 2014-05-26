@@ -37,9 +37,6 @@ function init() {
         });
 }
 
-function update() {
-    myMap.update();
-}
 
 function addAllCollection() {
         myMap.geoObjects.add(myVertexGeoObjects);
