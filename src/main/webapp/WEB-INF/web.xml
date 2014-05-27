@@ -20,7 +20,19 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
+        <url-pattern>/maps.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
         <url-pattern>/updategraph</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/logoutservlet</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/path</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>InSystem</filter-name>
@@ -43,6 +55,10 @@
         <servlet-name>UpdateGraph</servlet-name>
         <servlet-class>com.omsu.cherepanov.servlets.UpdateGraph</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Path</servlet-name>
+        <servlet-class>com.omsu.cherepanov.servlets.Path</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -55,6 +71,10 @@
     <servlet-mapping>
         <servlet-name>UpdateGraph</servlet-name>
         <url-pattern>/updategraph</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Path</servlet-name>
+        <url-pattern>/path</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

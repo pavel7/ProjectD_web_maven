@@ -26,8 +26,7 @@ public class SingletonGraph {
         return localInstance;
     }
 
-    public static void updateInstance()
-    {
+    public static void updateInstance() {
         DirectedGraphDAO directedGraphDAO = new DirectedGraphDAO();
         DirectedGraph localInstance = instance;
         if (localInstance == null) {
@@ -41,14 +40,13 @@ public class SingletonGraph {
                     }
                 }
             }
-        }
-        else{
+        } else {
             synchronized (DirectedGraph.class) {
-                    try {
-                        instance = localInstance = directedGraphDAO.retrieveDirectedGraph();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    instance = localInstance = directedGraphDAO.retrieveDirectedGraph();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

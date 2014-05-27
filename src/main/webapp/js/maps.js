@@ -39,19 +39,19 @@ function init() {
 
 
 function addAllCollection() {
-        myMap.geoObjects.add(myVertexGeoObjects);
-        myMap.geoObjects.add(myEdgeGeoObjects);
-        myMap.geoObjects.add(myEdgePathGeoObjects);
-        myMap.setBounds(myVertexGeoObjects.getBounds());
+    myMap.geoObjects.add(myVertexGeoObjects);
+    myMap.geoObjects.add(myEdgeGeoObjects);
+    myMap.geoObjects.add(myEdgePathGeoObjects);
+    myMap.setBounds(myVertexGeoObjects.getBounds());
 }
 
 function removeAllCollection() {
-        myMap.geoObjects.remove(myVertexGeoObjects);
-        myMap.geoObjects.remove(myEdgeGeoObjects);
-        myMap.geoObjects.remove(myEdgePathGeoObjects);
-        myVertexGeoObjects.removeAll();
-        myEdgeGeoObjects.removeAll();
-        myEdgePathGeoObjects.removeAll();
+    myMap.geoObjects.remove(myVertexGeoObjects);
+    myMap.geoObjects.remove(myEdgeGeoObjects);
+    myMap.geoObjects.remove(myEdgePathGeoObjects);
+    myVertexGeoObjects.removeAll();
+    myEdgeGeoObjects.removeAll();
+    myEdgePathGeoObjects.removeAll();
 }
 
 function setCenter(centerX, centerY) {
@@ -79,31 +79,31 @@ function addVertex(positionX, positionY) {
 }
 
 function addLabelVertex(positionX, positionY, iconlabel, text) {
-        myVertexGeoObjects.add(new ymaps.GeoObject({
-            // Описание геометрии.
-            geometry: {
-                type: "Point",
-                coordinates: [positionX, positionY]
-            },
-            properties: {
-                // Контент метки.
-                iconContent: iconlabel,
-                hintContent: text
-            }
-        }));
+    myVertexGeoObjects.add(new ymaps.GeoObject({
+        // Описание геометрии.
+        geometry: {
+            type: "Point",
+            coordinates: [positionX, positionY]
+        },
+        properties: {
+            // Контент метки.
+            iconContent: iconlabel,
+            hintContent: text
+        }
+    }));
 }
 
 
 function addEdge(startX, startY, endX, endY, information) {
-        ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
-            myEdgeGeoObjects.add(new Arrow([
-                [startX, startY],
-                [(startX + endX) / 2, startY],
-                [endX, endY]
-            ], {
-                balloonContent: "Defence=" + information
-            }));
-        });
+    ymaps.modules.require(['geoObject.Arrow'], function (Arrow) {
+        myEdgeGeoObjects.add(new Arrow([
+            [startX, startY],
+            [(startX + endX) / 2, startY],
+            [endX, endY]
+        ], {
+            balloonContent: "Defence=" + information
+        }));
+    });
 }
 
 function addPathEdge(startX, startY, endX, endY, information) {

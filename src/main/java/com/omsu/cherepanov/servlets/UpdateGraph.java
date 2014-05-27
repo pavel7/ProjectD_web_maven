@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Павел on 26.05.2014.
  */
-public class UpdateGraph extends HttpServlet{
+public class UpdateGraph extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SingletonGraph.updateInstance();
