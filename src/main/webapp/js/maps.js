@@ -7,6 +7,23 @@ var myVertexGeoObjects;
 var myEdgeGeoObjects;
 var myEdgePathGeoObjects;
 var myMap;
+var amountOfVertcies;
+
+ymaps.ready(init);
+ymaps.ready(loadMap);
+
+function loadMap() {
+    removeAllCollection();
+    loadGraph();
+    addAllCollection();
+}
+
+function loadPathMap() {
+    removeAllCollection();
+    loadPathGraph();
+    addAllCollection();
+}
+
 
 function init() {
     myMap = new ymaps.Map("map", {
@@ -38,11 +55,73 @@ function init() {
 }
 
 
+function loadGraph() {
+    $.ajax(
+        {
+            type: "POST",
+            url: "/graphjson",
+            dataType: "json",
+            success: function (data) {
+                var VertexAmount = data.amountOfVertex;
+                amountOfVertcies = data.amountOfVertex;
+                for (var i = 0; i < VertexAmount; i++) {
+                    addLabelVertex(data.Vertices[i].PointX, data.Vertices[i].PointY, data.Vertices[i].id);
+                    var ConnectionAmount = data.Vertices[i].ConnectionSize;
+                    for (var j = 0; j < ConnectionAmount; j++) {
+                        var isPart = data.Vertices[i].Connection[j].isPath;
+                        var connectionWithId = data.Vertices[i].Connection[j].ConnectionWithVertexId;
+                        if (isPart) {
+                            addPathEdge(data.Vertices[i].PointX, data.Vertices[i].PointY,
+                                data.Vertices[connectionWithId].PointX, data.Vertices[connectionWithId].PointY, data.Vertices[i].Connection[j].Defence);
+                        }
+                        else {
+                            addEdge(data.Vertices[i].PointX, data.Vertices[i].PointY,
+                                data.Vertices[connectionWithId].PointX, data.Vertices[connectionWithId].PointY, data.Vertices[i].Connection[j].Defence);
+                        }
+                    }
+                }
+
+                myMap.setBounds(myVertexGeoObjects.getBounds());
+            }
+
+        });
+}
+
+function loadPathGraph() {
+    $.ajax(
+        {
+            url: "/path",
+            dataType: "json",
+            success: function (data) {
+                var VertexAmount = data.amountOfVertex;
+                amountOfVertcies = data.amountOfVertex;
+                for (var i = 0; i < VertexAmount; i++) {
+                    addLabelVertex(data.Vertices[i].PointX, data.Vertices[i].PointY, data.Vertices[i].id);
+                    var ConnectionAmount = data.Vertices[i].ConnectionSize;
+                    for (var j = 0; j < ConnectionAmount; j++) {
+                        var isPart = data.Vertices[i].Connection[j].isPath;
+                        var connectionWithId = data.Vertices[i].Connection[j].ConnectionWithVertexId;
+                        if (isPart) {
+                            addPathEdge(data.Vertices[i].PointX, data.Vertices[i].PointY,
+                                data.Vertices[connectionWithId].PointX, data.Vertices[connectionWithId].PointY, data.Vertices[i].Connection[j].Defence);
+                        }
+                        else {
+                            addEdge(data.Vertices[i].PointX, data.Vertices[i].PointY,
+                                data.Vertices[connectionWithId].PointX, data.Vertices[connectionWithId].PointY, data.Vertices[i].Connection[j].Defence);
+                        }
+                    }
+                }
+
+                myMap.setBounds(myVertexGeoObjects.getBounds());
+            }
+
+        });
+}
+
 function addAllCollection() {
     myMap.geoObjects.add(myVertexGeoObjects);
     myMap.geoObjects.add(myEdgeGeoObjects);
     myMap.geoObjects.add(myEdgePathGeoObjects);
-    myMap.setBounds(myVertexGeoObjects.getBounds());
 }
 
 function removeAllCollection() {
