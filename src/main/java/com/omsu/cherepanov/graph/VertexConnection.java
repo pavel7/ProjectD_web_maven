@@ -21,6 +21,7 @@ public class VertexConnection {
     private int id;
     //private Mainclient mainclient;
     private List<ElementOfGraph> vertexConnection = new ArrayList<ElementOfGraph>(0);
+    private String password;
 
     public VertexConnection() {
 
@@ -30,6 +31,14 @@ public class VertexConnection {
         this.id = vertexConnection.getId();
         //this.mainclient = vertexConnection.getMainclient();
         this.vertexConnection = vertexConnection.getVertexConnection();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @OneToMany(fetch = FetchType.EAGER,

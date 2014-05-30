@@ -1,3 +1,4 @@
+import com.omsu.cherepanov.algorithms.AESDemo;
 import com.omsu.cherepanov.algorithms.Dijkstra;
 import com.omsu.cherepanov.clients.Construction;
 import com.omsu.cherepanov.clients.Equipment;
@@ -22,7 +23,7 @@ import java.util.HashMap;
  */
 public class ProjectX {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.println("qwe");
         Mainclient test = new Mainclient(0, 0, 0);
         Mainclient test1 = new Mainclient(0, 0, 1);
@@ -149,11 +150,17 @@ public class ProjectX {
         VertexConnection vertexConnection4 = new VertexConnection();
         VertexConnection vertexConnection5 = new VertexConnection();
         vertexConnection.setId(12);
+        vertexConnection.setPassword("password1");
         vertexConnection1.setId(13);
+        vertexConnection1.setPassword("password2");
         vertexConnection2.setId(14);
+        vertexConnection2.setPassword("password3");
         vertexConnection3.setId(15);
+        vertexConnection3.setPassword("password4");
         vertexConnection4.setId(16);
+        vertexConnection4.setPassword("password5");
         vertexConnection5.setId(17);
+        vertexConnection5.setPassword("password6");
         People testPeople10 = new People(55.7536, 37.4726, 10, "test1", "test1");
         vertexConnection.addVertex(testPeople10, new Connection((byte) 100, 25));
         People testPeople11 = new People(55.7834, 37.5144, 11, "test2", "test2");
@@ -230,6 +237,11 @@ public class ProjectX {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        AESDemo d = new AESDemo();
+        AESDemo.setPassword("test");
+        System.out.println("Encrypted string:" + d.encrypt("Hello"));
+        String encryptedText = d.encrypt("Hello");
+        System.out.println("Decrypted string:" + d.decrypt(encryptedText));
         System.out.print("1");
         Mainclient test151 = new Mainclient(0, 6, 8);
         Connection testC111 = new Connection((byte) 150, 14);

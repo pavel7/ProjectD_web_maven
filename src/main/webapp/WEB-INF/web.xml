@@ -39,6 +39,10 @@
         <url-pattern>/graphjson</url-pattern>
     </filter-mapping>
     <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/encrypttext</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>InSystem</filter-name>
         <url-pattern>/index.jsp</url-pattern>
     </filter-mapping>
@@ -67,6 +71,10 @@
         <servlet-name>GraphJSON</servlet-name>
         <servlet-class>com.omsu.cherepanov.servlets.GraphJSON</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EncryptText</servlet-name>
+        <servlet-class>com.omsu.cherepanov.servlets.EncryptText</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -88,6 +96,10 @@
     <servlet-mapping>
         <servlet-name>GraphJSON</servlet-name>
         <url-pattern>/graphjson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EncryptText</servlet-name>
+        <url-pattern>/encrypttext</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

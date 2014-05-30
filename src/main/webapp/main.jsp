@@ -90,9 +90,45 @@
         </div>
     </td>
 
-    <td class="col3">
+    <td class="col3" style="top:10% position: absolute">
+        <form id="encryptText" name="encryptText" action="encrypttext" method="post">
+            To vertex:<br>
+            <input type="text" name="userTo" id="userTo">
+            </input><br>
+
+            <p><b>Enter you text:</b></p>
+
+            <p><textarea rows="7" cols="40" name="textEncryptSource" id="textEncryptSource"></textarea></p>
+
+            <p><input type="submit" value="Encrypt"></p>
+        </form>
+        <p><b>Encripted text:</b></p>
+
+        <p><textarea rows="7" cols="45" name="textEncryptTo" id="textEncryptTo"></textarea></p>
     </td>
 </table>
+
+<script>
+    $(function () {
+        $("#encryptText").submit(function (t) {
+            t.preventDefault();
+
+            dataStringTwo = $("#encryptText").serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/encrypttext",
+                data: dataStringTwo,
+                dataType: "json",
+                success: function (data) {
+                    var text = data.msg;
+                    document.getElementById("textEncryptTo").value = 'qwe';
+                    document.getElementById("textEncryptTo").value = text;
+                }
+            });
+        });
+    });
+</script>
 </body>
 <script>
     <%
