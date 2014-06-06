@@ -12,6 +12,7 @@ var amountOfVertcies;
 ymaps.ready(init);
 ymaps.ready(loadMap);
 
+
 function loadMap() {
     removeAllCollection();
     loadGraph();

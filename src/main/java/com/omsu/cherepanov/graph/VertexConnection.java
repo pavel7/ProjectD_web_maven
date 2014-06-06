@@ -108,4 +108,17 @@ public class VertexConnection {
         }
         return true;
     }
+
+    public int vertexPosition(Mainclient mainclient) {
+        int indexOfElem = -1;
+        if (mainclient == null) {
+            return indexOfElem;
+        }
+        for (int i = 0; i < vertexConnection.size(); i++) {
+            if (vertexConnection.get(i).getVertex().equals(mainclient)) {
+                indexOfElem = i;
+            }
+        }
+        return indexOfElem;
+    }
 }

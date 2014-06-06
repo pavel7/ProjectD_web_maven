@@ -272,4 +272,37 @@ public class DirectedGraph {
         return connectionOfVertex.get(indexOfElem).getVertexConnection().iterator();
     }
 
+    public void removeEdge(int fromVertex, int toVertex) {
+        if (connectionOfVertex != null) {
+            if ((fromVertex < amountOfVertex) && (toVertex < amountOfVertex)) {
+                Mainclient removedClientConnection = connectionOfVertex.get(toVertex).getVertexConnection().get(0).getVertex();
+                int positionInConnection = connectionOfVertex.get(fromVertex).vertexPosition(removedClientConnection);
+                if (positionInConnection != -1) {
+                    connectionOfVertex.get(fromVertex).getVertexConnection().remove(positionInConnection);
+                    amountOfEdge--;
+                }
+            }
+        }
+
+    }
+
+    public void removeVertex(int vertex) {
+        if (connectionOfVertex != null) {
+            if (vertex < amountOfVertex) {
+                Mainclient removedClientConnection = connectionOfVertex.get(vertex).getVertexConnection().get(0).getVertex();
+                int removedEdge = connectionOfVertex.get(vertex).getVertexConnection().size();
+                connectionOfVertex.remove(vertex);
+                amountOfVertex--;
+                amountOfEdge = amountOfEdge - removedEdge + 1;
+                for (int i = 0; i < amountOfVertex; i++) {
+                    int positionInConnection = connectionOfVertex.get(i).vertexPosition(removedClientConnection);
+                    if (positionInConnection != -1) {
+                        connectionOfVertex.get(i).getVertexConnection().remove(positionInConnection);
+                        amountOfEdge--;
+                    }
+                }
+            }
+        }
+    }
+
 }

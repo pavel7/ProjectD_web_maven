@@ -15,7 +15,7 @@ body {
 
 table {
     width: 100%;
-    height: 300px;
+    margin-top: 5%;
     color: #00a1d2;
 }
 
@@ -29,7 +29,7 @@ table {
 }
 
 .col3 {
-    width: 30%;
+    width: 10%;
     right: 3%;
 }
 

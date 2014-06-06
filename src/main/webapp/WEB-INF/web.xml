@@ -43,6 +43,14 @@
         <url-pattern>/encrypttext</url-pattern>
     </filter-mapping>
     <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/removeedge</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/removevertex</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>InSystem</filter-name>
         <url-pattern>/index.jsp</url-pattern>
     </filter-mapping>
@@ -75,6 +83,14 @@
         <servlet-name>EncryptText</servlet-name>
         <servlet-class>com.omsu.cherepanov.servlets.EncryptText</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveEdge</servlet-name>
+        <servlet-class>com.omsu.cherepanov.servlets.EdgeRemove</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveVertex</servlet-name>
+        <servlet-class>com.omsu.cherepanov.servlets.VertexRemove</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -100,6 +116,14 @@
     <servlet-mapping>
         <servlet-name>EncryptText</servlet-name>
         <url-pattern>/encrypttext</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveEdge</servlet-name>
+        <url-pattern>/removeedge</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveVertex</servlet-name>
+        <url-pattern>/removevertex</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

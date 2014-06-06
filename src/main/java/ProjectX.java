@@ -216,12 +216,12 @@ public class ProjectX {
             //constructionDAO.saveConstruction(testConstruction);
             //elementOfGraphDAO.saveElementOfGraph(elementOfGraph);
 //            People test115 = peopleDAO.retrievePeople(7);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection1);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection2);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection3);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection4);
-//            vertexConnectionDAO.saveVertexConnection(vertexConnection5);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection1);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection2);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection3);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection4);
+            vertexConnectionDAO.saveVertexConnection(vertexConnection5);
 //            VertexConnection t1 = vertexConnectionDAO.retrieveVertexConnection(12);
 //            VertexConnection t2 = vertexConnectionDAO.retrieveVertexConnection(13);
 //            DirectedGraph test124 = directedGraphDAO.retrieveDirectedGraph();
@@ -229,6 +229,8 @@ public class ProjectX {
 //            test123.setAmountOfVertex(test124.getAmountOfVertex());
 //            test123.setConnectionOfVertex(test124.getConnectionOfVertex());
 //            DirectedGraph test125 = SingletonGraph.getInstance();
+//            test123.removeVertex(25);
+//            test123.removeEdge(25,44);
 //            //directedGraphDAO.deleteDirectedGraph(test125);
 //            vertexConnectionDAO.deleteVertexConnection(t1);
 //            vertexConnectionDAO.deleteVertexConnection(t2);

@@ -54,7 +54,6 @@
 
             });
         });
-
     </script>
 </head>
 <body>
@@ -63,50 +62,80 @@
 </div>
 
 <table cols="3">
-    <td class="col1">
-        <div id="graph">
-            <form id="calculationPath" name="calculationPath" action="path" method="post">
-                <b>Calculation most secure method of transmitting
-                    information</b><br>
-                From:<br>
-                <input type="text" name="listboxFrom" id="listboxFrom">
+    <tr>
+        <td class="col1">
+            <div id="graph">
+                <form id="calculationPath" name="calculationPath" action="path" method="post">
+                    <b>Calculation most secure method of transmitting
+                        information</b><br>
+                    From:<br>
+                    <input type="text" name="listboxFrom" id="listboxFrom">
+                    </input><br>
+                    To:<br>
+                    <input type="text" name="listboxTo" id="listboxTo">
+                    </input>
+                    <br>
+                    <input type="submit" value="Calculate path">
+                </form>
+                <form action="path" method="post">
+                    <input type="hidden" name="emptyPath" id="emptyPath" value="makeEmpty">
+                    <input type="submit" value="Remove path">
+                </form>
+            </div>
+        </td>
+        <td class="col2">
+            <div id="map" style="height: 40%; width: 40%; position: absolute">
+                <input type="button" value="Update Graph" onclick="loadMap()"/>
+                <a href="/maps.jsp">Open page with online update map</a>
+            </div>
+        </td>
+
+        <td class="col3">
+            <form id="encryptText" name="encryptText" action="encrypttext" method="post">
+                To vertex:<br>
+                <input type="text" name="userTo" id="userTo">
                 </input><br>
-                To:<br>
-                <input type="text" name="listboxTo" id="listboxTo">
+
+                <p><b>Enter you text:</b></p>
+
+                <p><textarea rows="7" cols="40" name="textEncryptSource" id="textEncryptSource"></textarea></p>
+
+                <p><input type="submit" value="Encrypt"></p>
+            </form>
+            <p><b>Encripted text:</b></p>
+
+            <p><textarea rows="7" cols="45" name="textEncryptTo" id="textEncryptTo"></textarea></p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form id="EdgeRemove" name="EdgeRemove" action="removeedge" method="get">
+                <b>Remove Edge</b><br>
+                From Vertex:<br>
+                <input type="text" name="fromVertex" id="fromVertex">
+                </input><br>
+                To Vertex:<br>
+                <input type="text" name="toVertex" id="toVertex">
                 </input>
                 <br>
-                <input type="submit" value="Calculate path">
+                <input type="submit" value="Remove Edge">
             </form>
-            <form action="path" method="post">
-                <input type="hidden" name="emptyPath" id="emptyPath" value="makeEmpty">
-                <input type="submit" value="Remove path">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form id="VertexRemove" name="VertexRemove" action="removevertex" method="get">
+                <b>Remove Vertex</b><br>
+                Vertex Number№:<br>
+                <input type="text" name="vertex" id="vertex">
+                </input><br>
+                <input type="submit" value="Remove Vertex">
             </form>
-        </div>
-    </td>
-    <td class="col2">
-        <div id="map" style="height: 40%; width: 40%; position: absolute">
-            <input type="button" value="Update Graph" onclick="loadMap()"/>
-            <a href="/maps.jsp">Open page with online update map</a>
-        </div>
-    </td>
-
-    <td class="col3" style="top:10% position: absolute">
-        <form id="encryptText" name="encryptText" action="encrypttext" method="post">
-            To vertex:<br>
-            <input type="text" name="userTo" id="userTo">
-            </input><br>
-
-            <p><b>Enter you text:</b></p>
-
-            <p><textarea rows="7" cols="40" name="textEncryptSource" id="textEncryptSource"></textarea></p>
-
-            <p><input type="submit" value="Encrypt"></p>
-        </form>
-        <p><b>Encripted text:</b></p>
-
-        <p><textarea rows="7" cols="45" name="textEncryptTo" id="textEncryptTo"></textarea></p>
-    </td>
+        </td>
+    </tr>
 </table>
+
+</body>
 
 <script>
     $(function () {
@@ -129,14 +158,48 @@
         });
     });
 </script>
-</body>
 <script>
-    <%
-        String msg=(String) session.getAttribute("error");
-        if(msg != null )
-        {
-            %>alert('<%=msg%>')<%
-        session.removeAttribute("error");
-    }
-%></script>
+    $(function () {
+        $("#EdgeRemove").submit(function (f) {
+            f.preventDefault();
+
+            dataStringThree = $("#EdgeRemove").serialize();
+
+            $.ajax({
+                type: "GET",
+                url: "/removeedge",
+                data: dataStringThree,
+                dataType: "json",
+                success: function (data) {
+                    loadMap();
+                    myMap.setBounds(myVertexGeoObjects.getBounds());
+                }
+
+            });
+
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#VertexRemove").submit(function (f) {
+            f.preventDefault();
+
+            dataStringThree = $("#VertexRemove").serialize();
+
+            $.ajax({
+                type: "GET",
+                url: "/removevertex",
+                data: dataStringThree,
+                dataType: "json",
+                success: function (data) {
+                    loadMap();
+                    myMap.setBounds(myVertexGeoObjects.getBounds());
+                }
+
+            });
+
+        });
+    });
+</script>
 </html>
