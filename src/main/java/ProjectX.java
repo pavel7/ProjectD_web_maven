@@ -240,10 +240,10 @@ public class ProjectX {
             e.printStackTrace();
         }
         AESDemo d = new AESDemo();
-        AESDemo.setPassword("test");
-        System.out.println("Encrypted string:" + d.encrypt("Hello"));
+        d.AesCrypt("password3");
+        System.out.println("Encrypted string:" + d.encrypt("Hello66"));
         String encryptedText = d.encrypt("Hello");
-        System.out.println("Decrypted string:" + d.decrypt(encryptedText));
+        System.out.println("Decrypted string:" + d.decrypt("nU5hF/sOjrjiD2mRRb7SgA=="));
         System.out.print("1");
         Mainclient test151 = new Mainclient(0, 6, 8);
         Connection testC111 = new Connection((byte) 150, 14);

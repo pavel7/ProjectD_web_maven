@@ -1,106 +1,117 @@
 package com.omsu.cherepanov.algorithms;
 
 
-import org.apache.commons.codec.binary.Base64;
-
 import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.AlgorithmParameters;
+import javax.xml.bind.DatatypeConverter;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
  * Created by Павел on 31.05.2014.
  */
+
 public class AESDemo {
 
-    private static String password;
-    private static String salt;
-    private static int pswdIterations = 65536;
-    private static int keySize = 256;
-    private byte[] ivBytes;
+    byte[] seed;
 
-    public static String getPassword() {
-        return password;
+    public void AesCrypt(String password) {
+        seed = password.getBytes();
     }
 
-    public static void setPassword(String password) {
-        AESDemo.password = password;
+    public void AesCrypt(byte[] password) {
+        seed = password;
     }
 
-    public String encrypt(String plainText) throws Exception {
-
-        if (password != null) {
-            //get salt
-            salt = generateSalt();
-            byte[] saltBytes = salt.getBytes("UTF-8");
-
-            // Derive the key
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            PBEKeySpec spec = new PBEKeySpec(
-                    password.toCharArray(),
-                    saltBytes,
-                    pswdIterations,
-                    keySize
-            );
-
-            SecretKey secretKey = factory.generateSecret(spec);
-            SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
-
-            //encrypt the message
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secret);
-            AlgorithmParameters params = cipher.getParameters();
-            ivBytes = params.getParameterSpec(IvParameterSpec.class).getIV();
-            byte[] encryptedTextBytes = cipher.doFinal(plainText.getBytes("UTF-8"));
-            return new Base64().encodeAsString(encryptedTextBytes);
+    public String encrypt(String cleartext) {
+        byte[] rawKey = new byte[0];
+        try {
+            rawKey = getRawKey(seed);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return "";
-    }
-
-    @SuppressWarnings("static-access")
-    public String decrypt(String encryptedText) throws Exception {
-        if (password != null) {
-            byte[] saltBytes = salt.getBytes("UTF-8");
-            byte[] encryptedTextBytes = new Base64().decodeBase64(encryptedText);
-
-            // Derive the key
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            PBEKeySpec spec = new PBEKeySpec(
-                    password.toCharArray(),
-                    saltBytes,
-                    pswdIterations,
-                    keySize
-            );
-
-            SecretKey secretKey = factory.generateSecret(spec);
-            SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), "AES");
-
-            // Decrypt the message
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivBytes));
-
-
-            byte[] decryptedTextBytes = null;
-            try {
-                decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
-            }
-
-            return new String(decryptedTextBytes);
+        byte[] result = new byte[0];
+        try {
+            result = encrypt(rawKey, cleartext.getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
         }
-        return "";
+        return toHex(result);
+
     }
 
-    public String generateSalt() {
-        SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[20];
-        random.nextBytes(bytes);
-        String s = new String(bytes);
-        return s;
+    public String decrypt(String encrypted) {
+        byte[] rawKey = new byte[0];
+
+        try {
+            rawKey = getRawKey(seed);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] enc = toByte(encrypted);
+        byte[] result = new byte[0];
+        try {
+            result = decrypt(rawKey, enc);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return new String(result);
+
     }
+
+    private static byte[] getRawKey(byte[] password) throws NoSuchAlgorithmException {
+        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        sr.setSeed(password);
+        kgen.init(256, sr);
+        SecretKey skey = kgen.generateKey();
+        byte[] raw = skey.getEncoded();
+        return raw;
+    }
+
+    private static byte[] encrypt(byte[] raw, byte[] clear)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] encrypted = cipher.doFinal(clear);
+        return encrypted;
+    }
+
+    private static byte[] decrypt(byte[] raw, byte[] encrypted)
+            throws NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] decrypted = cipher.doFinal(encrypted);
+        return decrypted;
+    }
+
+    public static String toHex(byte[] buffer) {
+        return DatatypeConverter.printBase64Binary(buffer);
+    }
+
+    public static byte[] toByte(String hex) {
+        return DatatypeConverter.parseBase64Binary(hex);
+    }
+
 }

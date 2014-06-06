@@ -24,33 +24,59 @@ public class Path extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(true);
         session.removeAttribute("path");
+        session.removeAttribute("probability");
         if (req.getParameter("emptyPath") != null) {
-            if (req.getParameter("emptyPath").equals("makeEmpty"))
+            if (req.getParameter("emptyPath").equals("makeEmpty")) {
                 resp.sendRedirect("main.jsp");
-            else
+            } else {
                 resp.sendRedirect("main.jsp");
+            }
         } else {
             DirectedGraph directedGraph = SingletonGraph.getInstance();
             if ((req.getParameter("listboxFrom") == null) || (req.getParameter("listboxTo") == null)) {
-                session.setAttribute("error", "Empty parameters");
-                resp.sendRedirect("main.jsp");
+                resp.setContentType("application/json");
+                resp.setHeader("Cache-Control", "nocache");
+                resp.setCharacterEncoding("utf-8");
+                PrintWriter out = resp.getWriter();
+                JSONObject json = new JSONObject();
+
+                json.put("error", "empty parameters");
+                out.print(json.toString());
             } else {
                 try {
                     int from = Integer.parseInt(req.getParameter("listboxFrom"));
                     int to = Integer.parseInt(req.getParameter("listboxTo"));
                     if ((from < 0) || (from >= directedGraph.getAmountOfVertex()) || (to < 0) || (to >= directedGraph.getAmountOfVertex())) {
-                        session.setAttribute("error", "Incorrect parameters");
-                        resp.sendRedirect("main.jsp");
+                        resp.setContentType("application/json");
+                        resp.setHeader("Cache-Control", "nocache");
+                        resp.setCharacterEncoding("utf-8");
+                        PrintWriter out = resp.getWriter();
+                        JSONObject json = new JSONObject();
+
+                        json.put("error", "incorrect parameters");
+                        out.print(json.toString());
                     } else if (from == to) {
-                        session.setAttribute("error", "Start coincides with the end");
-                        resp.sendRedirect("main.jsp");
+                        resp.setContentType("application/json");
+                        resp.setHeader("Cache-Control", "nocache");
+                        resp.setCharacterEncoding("utf-8");
+                        PrintWriter out = resp.getWriter();
+                        JSONObject json = new JSONObject();
+
+                        json.put("error", "from == to");
+                        out.print(json.toString());
                     } else {
                         Dijkstra dijkstra = new Dijkstra(directedGraph, directedGraph.getConnectionOfVertex().get(from).getVertexConnection().get(0).getVertex()
                                 , directedGraph.getConnectionOfVertex().get(to).getVertexConnection().get(0).getVertex());
                         int[] pathFromTo = dijkstra.pathFromTo();
                         if (pathFromTo[to] == -1) {
-                            session.setAttribute("error", "Vertices not connected");
-                            resp.sendRedirect("main.jsp");
+                            resp.setContentType("application/json");
+                            resp.setHeader("Cache-Control", "nocache");
+                            resp.setCharacterEncoding("utf-8");
+                            PrintWriter out = resp.getWriter();
+                            JSONObject json = new JSONObject();
+
+                            json.put("error", "vertex not connected");
+                            out.print(json.toString());
                         } else {
                             List<Integer> graphPath = new ArrayList<Integer>(0);
                             List<Integer> graphPathInvert = new ArrayList<Integer>(0);
@@ -84,6 +110,7 @@ public class Path extends HttpServlet {
                             json.put("amountOfVertex", amountOfVertex);
                             json.put("amountOfEdge", amountOfEdge);
                             JSONArray arrayAllParam = new JSONArray();
+                            double probability = 1;
                             for (int i = 0; i < amountOfVertex; i++) {
                                 boolean isPath = false;
                                 if (notEmptyPath) {
@@ -104,6 +131,7 @@ public class Path extends HttpServlet {
                                     mapConnection.put("Status", directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getEdge().getIsStatus());
                                     if ((isPath) && (notEmptyPath) && (graphPathInvert.get(currentPos) == directedGraph.indexOfElementGraph(directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getVertex()))) {
                                         mapConnection.put("isPath", true);
+                                        probability = probability * (directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(j).getEdge().getDefence() / 100.00);
                                     } else {
                                         mapConnection.put("isPath", false);
                                     }
@@ -120,14 +148,21 @@ public class Path extends HttpServlet {
                                 //arr.put(i).put("pointX", directedGraph.getConnectionOfVertex().get(i).getVertexConnection().get(0).getVertex().getPointX());
 
                             }
+                            json.put("probability", probability);
                             json.put("Vertices", arrayAllParam);
                             //json.put("Vertex", arr);
                             out.print(json.toString());
                         }
                     }
                 } catch (NumberFormatException e) {
-                    session.setAttribute("error", "Incorrect parameters");
-                    resp.sendRedirect("main.jsp");
+                    resp.setContentType("application/json");
+                    resp.setHeader("Cache-Control", "nocache");
+                    resp.setCharacterEncoding("utf-8");
+                    PrintWriter out = resp.getWriter();
+                    JSONObject json = new JSONObject();
+
+                    json.put("error", "incorrect parameters");
+                    out.print(json.toString());
                 }
             }
         }

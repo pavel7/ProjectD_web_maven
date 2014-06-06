@@ -30,7 +30,7 @@ public class EncryptText extends HttpServlet {
             if ((userTo >= 0) && (userTo < directedGraph.getAmountOfVertex())) {
                 String sourceText = req.getParameter("textEncryptSource");
                 AESDemo aesDemo = new AESDemo();
-                AESDemo.setPassword(directedGraph.getConnectionOfVertex().get(userTo).getPassword());
+                aesDemo.AesCrypt(directedGraph.getConnectionOfVertex().get(userTo).getPassword());
                 String encryptedText = "";
                 try {
                     encryptedText = aesDemo.encrypt(sourceText);
