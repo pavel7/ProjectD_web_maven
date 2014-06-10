@@ -6,6 +6,7 @@
 var myVertexGeoObjects;
 var myEdgeGeoObjects;
 var myEdgePathGeoObjects;
+var conflictEnv;
 var myMap;
 var amountOfVertcies;
 
@@ -32,6 +33,10 @@ function init() {
         zoom: 7,
         type: 'yandex#satellite'
     });
+    conflictEnv = new ymaps.GeoObjectCollection({},
+        {
+            draggable: false
+        });
     myVertexGeoObjects = new ymaps.GeoObjectCollection({},
         {
             preset: 'islands#blackStretchyIcon',
@@ -88,6 +93,12 @@ function loadGraph() {
         });
 }
 
+function addConflictArea(corX, corY, Radius)
+{
+    var circle = new ymaps.Circle([[corX, corY], Radius], null, { draggable: false });
+    myMap.geoObjects.add(circle);
+}
+
 function loadPathGraph() {
     $.ajax(
         {
@@ -123,6 +134,7 @@ function addAllCollection() {
     myMap.geoObjects.add(myVertexGeoObjects);
     myMap.geoObjects.add(myEdgeGeoObjects);
     myMap.geoObjects.add(myEdgePathGeoObjects);
+    myMap.geoObjects.add(conflictEnv);
 }
 
 function removeAllCollection() {

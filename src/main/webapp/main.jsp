@@ -47,6 +47,14 @@
                             }
                         }
                         addAllCollection();
+                        if(data.probability) {
+                            alert("probability of message delivery=" + data.probability*100 +"%");
+                        }
+                        if (data.error)
+                        {
+                            alert(data.error);
+                            loadMap();
+                        }
                         myMap.setBounds(myVertexGeoObjects.getBounds());
                     }
 
@@ -61,7 +69,19 @@
     <a href="/logoutservlet">Logout</a>
 </div>
 
+
+
 <table cols="3">
+    <tr>
+        <td>
+        <form id="confEnv" onsubmit="addConflictArea(corX.value, corY.value, radius.value);return false">
+            corX:  <input type="text" name="corX" id="corX" value=""><br>
+            corY:  <input type="text" name="corY" id="corY" value=""><br>
+            radius:<input type="text" name="radius" id="radius" value=""><br>
+            <input type="submit" value="Отправить">
+        </form>
+        </td>
+    </tr>
     <tr>
         <td class="col1">
             <div id="graph">
@@ -105,7 +125,6 @@
             <p><b>Encripted text:</b></p>
 
             <p><textarea rows="7" cols="45" name="textEncryptTo" id="textEncryptTo"></textarea></p>
-        </td>
     </tr>
     <tr>
         <td>
@@ -126,7 +145,7 @@
         <td>
             <form id="VertexRemove" name="VertexRemove" action="removevertex" method="get">
                 <b>Remove Vertex</b><br>
-                Vertex Number№:<br>
+                Vertex №:<br>
                 <input type="text" name="vertex" id="vertex">
                 </input><br>
                 <input type="submit" value="Remove Vertex">
@@ -151,7 +170,6 @@
                 dataType: "json",
                 success: function (data) {
                     var text = data.msg;
-                    document.getElementById("textEncryptTo").value = 'qwe';
                     document.getElementById("textEncryptTo").value = text;
                 }
             });
